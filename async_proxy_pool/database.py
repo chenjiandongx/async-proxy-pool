@@ -5,7 +5,7 @@ import random
 
 import redis
 
-from async_proxy_pool.config import (
+from .config import (
     REDIS_KEY,
     REDIS_PORT,
     REDIS_PASSWORD,

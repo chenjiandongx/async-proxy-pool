@@ -4,9 +4,9 @@
 import aiohttp
 import asyncio
 
-from async_proxy_pool.config import TEST_BASE_URL, TEST_BATCH_COUNT
-from async_proxy_pool.logger import logger
-from async_proxy_pool.database import RedisClient
+from .config import TEST_BASE_URL, TEST_BATCH_COUNT
+from .logger import logger
+from .database import RedisClient
 
 
 class Validator:

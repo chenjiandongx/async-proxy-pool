@@ -4,9 +4,9 @@
 import re
 from types import FunctionType
 
-from async_proxy_pool.utils import requests
-from async_proxy_pool.database import RedisClient
-from async_proxy_pool.logger import logger
+from .utils import requests
+from .database import RedisClient
+from .logger import logger
 
 
 all_funcs = []

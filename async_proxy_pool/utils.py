@@ -5,7 +5,7 @@ import asyncio
 
 import aiohttp
 
-from async_proxy_pool.config import HEADERS
+from .config import HEADERS
 
 
 async def _get_page(url: str) -> str:
