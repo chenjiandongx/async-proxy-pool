@@ -4,7 +4,7 @@
 # 校验器测试网站
 TEST_BASE_URL = "https://httpbin.org/"
 # 批量测试数量
-TEST_BATCH_COUNT = 100
+TEST_BATCH_COUNT = 200
 # 请求超时时间
 REQUEST_TIMEOUT = 15
 
