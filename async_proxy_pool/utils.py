@@ -5,12 +5,14 @@ import asyncio
 
 import aiohttp
 
-from .config import HEADERS
+from .config import HEADERS, REQUEST_TIMEOUT
 
 
 async def _get_page(url: str) -> str:
     async with aiohttp.ClientSession() as session:
-        async with session.get(url, headers=HEADERS) as resp:
+        async with session.get(
+            url, headers=HEADERS, timeout=REQUEST_TIMEOUT
+        ) as resp:
             return await resp.text()
 
 

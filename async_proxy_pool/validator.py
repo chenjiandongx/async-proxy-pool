@@ -4,7 +4,7 @@
 import aiohttp
 import asyncio
 
-from .config import TEST_BASE_URL, TEST_BATCH_COUNT
+from .config import TEST_BASE_URL, TEST_BATCH_COUNT, REQUEST_TIMEOUT
 from .logger import logger
 from .database import RedisClient
 
@@ -21,7 +21,7 @@ class Validator:
                 if isinstance(proxy, bytes):
                     proxy = proxy.decode("utf8")
                 async with session.get(
-                    TEST_BASE_URL, proxy=proxy, timeout=10
+                    TEST_BASE_URL, proxy=proxy, timeout=REQUEST_TIMEOUT
                 ) as resp:
                     if resp.status == 200:
                         logger.info("Validator √ {}".format(proxy))

@@ -32,7 +32,7 @@ class Crawler:
     @collect_funcs
     def crawl_66ip() -> list:
         url = (
-            "http://www.66ip.cn/nmtq.php?getnum=300&isp=0"
+            "http://www.66ip.cn/nmtq.php?getnum=100&isp=0"
             "&anonymoustype=0&area=0&proxytype={}&api=66ip"
         )
         pattern = "\d+\.\d+.\d+\.\d+:\d+"

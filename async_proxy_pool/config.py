@@ -5,6 +5,8 @@
 TEST_BASE_URL = "https://httpbin.org/"
 # 批量测试数量
 TEST_BATCH_COUNT = 100
+# 请求超时时间
+REQUEST_TIMEOUT = 15
 
 REDIS_HOST = "localhost"
 REDIS_PORT = 6379
