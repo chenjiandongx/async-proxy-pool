@@ -45,6 +45,12 @@ class RedisClient:
             if result:
                 return random.choice(result)
 
+    def get(self, count=1):
+        result = self.redis.zrevrange(REDIS_KEY, MIN_SCORE, MAX_SCORE)
+        for index, value in enumerate(result):
+            if index < count:
+                yield value.decode("utf-8")
+
     def count(self) -> int:
         return self.redis.zcard(REDIS_KEY)
 
