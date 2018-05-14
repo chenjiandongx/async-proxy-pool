@@ -26,11 +26,11 @@ class Validator:
                     if resp.status == 200:
                         logger.info("Validator √ {}".format(proxy))
                     else:
-                        logger.info("Validator x {}".format(proxy))
+                        logger.info("Validator × {}".format(proxy))
                         self.redis.decrease(proxy)
             except:
                 self.redis.decrease(proxy)
-                logger.info("Validator x {}".format(proxy))
+                logger.info("Validator × {}".format(proxy))
 
     def run(self) -> None:
         logger.info("Validator working...")

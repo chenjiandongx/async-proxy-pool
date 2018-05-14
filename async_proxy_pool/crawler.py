@@ -47,8 +47,9 @@ class Crawler:
 
         def get_proxies(proxy_type, host):
             html = requests(url.format(proxy_type))
-            for proxy in re.findall(pattern, html):
-                yield host.format(proxy)
+            if html:
+                for proxy in re.findall(pattern, html):
+                    yield host.format(proxy)
 
         items, res = [(0, "http://{}"), (1, "https://{}")], []
         for item in items:
@@ -65,12 +66,13 @@ class Crawler:
 
         def get_proxies(proxy_type, host):
             html = requests(url.format(proxy_type))
-            doc = pyquery.PyQuery(html)
-            for proxy in doc("table tr").items():
-                ip = proxy("td:nth-child(2)").text()
-                port = proxy("td:nth-child(3)").text()
-                if ip and port:
-                    yield host.format(ip, port)
+            if html:
+                doc = pyquery.PyQuery(html)
+                for proxy in doc("table tr").items():
+                    ip = proxy("td:nth-child(2)").text()
+                    port = proxy("td:nth-child(3)").text()
+                    if ip and port:
+                        yield host.format(ip, port)
 
         res, items = [], []
         for page in range(1, 11):
