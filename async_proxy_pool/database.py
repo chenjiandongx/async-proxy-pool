@@ -50,3 +50,6 @@ class RedisClient:
 
     def all(self) -> list:
         return self.redis.zrangebyscore(REDIS_KEY, MIN_SCORE, MAX_SCORE)
+
+
+redis_conn = RedisClient()

@@ -10,6 +10,7 @@ name = "pypi"
 redis = "*"
 aiohttp = "*"
 schedule = "*"
+sanic = "*"
 
 
 [dev-packages]
