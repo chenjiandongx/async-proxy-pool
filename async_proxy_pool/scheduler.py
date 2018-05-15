@@ -12,7 +12,12 @@ from .validator import validator
 
 
 def run_schedule():
+    """
+    启动客户端
+    """
+    # 启动收集器
     schedule.every(CRAWLER_RUN_CYCLE).minutes.do(crawler.run).run()
+    # 启动验证器
     schedule.every(VALIDATOR_RUN_CYCLE).minutes.do(validator.run).run()
 
     while True:

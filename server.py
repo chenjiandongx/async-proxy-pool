@@ -5,4 +5,5 @@ from async_proxy_pool.webapi import app
 from async_proxy_pool.config import SANIC_HOST, SANIC_PORT
 
 
+# 启动服务端 app
 app.run(host=SANIC_HOST, port=SANIC_PORT)

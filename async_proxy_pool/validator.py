@@ -15,6 +15,11 @@ class Validator:
         self.redis = RedisClient()
 
     async def test_proxy(self, proxy):
+        """
+        测试代理
+
+        :param proxy: 指定代理
+        """
         async with aiohttp.ClientSession() as session:
             try:
                 if isinstance(proxy, bytes):
@@ -32,6 +37,9 @@ class Validator:
                 logger.info("Validator × {}".format(proxy))
 
     def run(self):
+        """
+        启动校验器
+        """
         logger.info("Validator working...")
         proxies = self.redis.all()
         loop = asyncio.get_event_loop()
