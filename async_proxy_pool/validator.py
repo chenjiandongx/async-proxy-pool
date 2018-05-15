@@ -14,8 +14,8 @@ class Validator:
     def __init__(self):
         self.redis = RedisClient()
 
-    async def test_proxy(self, proxy, conn):
-        async with aiohttp.ClientSession(connector=conn) as session:
+    async def test_proxy(self, proxy):
+        async with aiohttp.ClientSession() as session:
             try:
                 if isinstance(proxy, bytes):
                     proxy = proxy.decode("utf8")
@@ -35,10 +35,9 @@ class Validator:
         logger.info("Validator working...")
         proxies = self.redis.all()
         loop = asyncio.get_event_loop()
-        conn = aiohttp.TCPConnector(verify_ssl=False)
         for i in range(0, len(proxies), TEST_BATCH_COUNT):
             _proxies = proxies[i:i + TEST_BATCH_COUNT]
-            tasks = [self.test_proxy(proxy, conn) for proxy in _proxies]
+            tasks = [self.test_proxy(proxy) for proxy in _proxies]
             if tasks:
                 loop.run_until_complete(asyncio.wait(tasks))
 
