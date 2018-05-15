@@ -81,5 +81,52 @@ class Crawler:
             res.extend(get_proxies(*item))
         return res
 
+    @staticmethod
+    @collect_funcs
+    def crawl_kuaidaili():
+        """
+        快代理：https://www.kuaidaili.com
+        """
+        url = "https://www.kuaidaili.com/free/{}"
+
+        def get_proxies(proxy_type):
+            html = requests(url.format(proxy_type))
+            if html:
+                doc = pyquery.PyQuery(html)
+                for proxy in doc(".table-bordered tr").items():
+                    ip = proxy("[data-title=IP]").text()
+                    port = proxy("[data-title=PORT]").text()
+                    if ip and port:
+                        yield "http://{}:{}".format(ip, port)
+
+        items, res = ["inha/1/"], []
+        for item in items:
+            res.extend(get_proxies(item))
+        return res
+
+    @staticmethod
+    @collect_funcs
+    def crawl_ip3366():
+        """
+        云代理：http://www.ip3366.net
+        """
+        url = "http://www.ip3366.net/?stype=1&page={}"
+
+        def get_proxies(page):
+            html = requests(url.format(page))
+            if html:
+                doc = pyquery.PyQuery(html)
+                for proxy in doc(".table-bordered tr").items():
+                    ip = proxy("td:nth-child(1)").text()
+                    port = proxy("td:nth-child(2)").text()
+                    schema = proxy("td:nth-child(4)").text()
+                    if ip and port and schema:
+                        yield "{}://{}:{}".format(schema.lower(), ip, port)
+
+        items, res = [page for page in range(1, 8)], []
+        for item in items:
+            res.extend(get_proxies(item))
+        return res
+
 
 crawler = Crawler()
