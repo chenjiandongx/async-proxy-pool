@@ -2,7 +2,6 @@
 # coding=utf-8
 
 import re
-from types import FunctionType
 
 import pyquery
 
@@ -14,7 +13,7 @@ from .logger import logger
 all_funcs = []
 
 
-def collect_funcs(func: FunctionType) -> FunctionType:
+def collect_funcs(func):
     all_funcs.append(func)
     return func
 
@@ -22,7 +21,7 @@ def collect_funcs(func: FunctionType) -> FunctionType:
 class Crawler:
 
     @staticmethod
-    def run() -> None:
+    def run():
         """
         启动收集器
         """
@@ -35,7 +34,7 @@ class Crawler:
 
     @staticmethod
     @collect_funcs
-    def crawl_66ip() -> list:
+    def crawl_66ip():
         """
         66ip 代理：http://www.66ip.cn
         """
@@ -58,7 +57,7 @@ class Crawler:
 
     @staticmethod
     @collect_funcs
-    def crawl_xici() -> list:
+    def crawl_xici():
         """
         西刺代理：http://www.xicidaili.com
         """
@@ -75,7 +74,7 @@ class Crawler:
                         yield host.format(ip, port)
 
         res, items = [], []
-        for page in range(1, 11):
+        for page in range(1, 21):
             items.append(("wt/{}".format(page), "http://{}:{}"))
             items.append(("wn/{}".format(page), "https://{}:{}"))
         for item in items:

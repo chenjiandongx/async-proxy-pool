@@ -8,7 +8,7 @@ import aiohttp
 from .config import HEADERS, REQUEST_TIMEOUT
 
 
-async def _get_page(url: str) -> str:
+async def _get_page(url):
     async with aiohttp.ClientSession() as session:
         try:
             async with session.get(
@@ -16,10 +16,10 @@ async def _get_page(url: str) -> str:
             ) as resp:
                 return await resp.text()
         except:
-            pass
+            return ""
 
 
-def requests(url: str) -> str:
+def requests(url):
     loop = asyncio.get_event_loop()
     html = loop.run_until_complete(asyncio.gather(_get_page(url)))
     if html:

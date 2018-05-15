@@ -4,7 +4,7 @@
 import logging
 
 
-def get_logger() -> logging.Logger:
+def get_logger():
     formatter = logging.Formatter("%(asctime)s - %(message)s")
     logger = logging.getLogger("monitor")
     logger.setLevel(logging.INFO)

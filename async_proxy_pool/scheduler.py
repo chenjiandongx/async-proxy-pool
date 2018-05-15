@@ -11,7 +11,7 @@ from .crawler import crawler
 from .validator import validator
 
 
-def run_schedule() -> None:
+def run_schedule():
     schedule.every(CRAWLER_RUN_CYCLE).minutes.do(crawler.run).run()
     schedule.every(VALIDATOR_RUN_CYCLE).minutes.do(validator.run).run()
 
