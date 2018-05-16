@@ -10,6 +10,7 @@ from .config import (
     REDIS_PORT,
     REDIS_PASSWORD,
     REDIS_HOST,
+    REDIS_MAX_CONNECTION,
     MAX_SCORE,
     MIN_SCORE,
 )
@@ -20,9 +21,12 @@ class RedisClient:
     def __init__(
         self, host=REDIS_HOST, port=REDIS_PORT, password=REDIS_PASSWORD
     ):
-        self.redis = redis.Redis(host=host, port=port, password=password)
+        conn_pool = redis.ConnectionPool(
+            host=host, port=port, password=password, max_connections=REDIS_MAX_CONNECTION
+        )
+        self.redis = redis.Redis(connection_pool=conn_pool)
 
-    def add(self, proxy, score=MAX_SCORE):
+    def add_proxy(self, proxy, score=MAX_SCORE):
         """
         新增一个代理
 
@@ -32,7 +36,7 @@ class RedisClient:
         if not self.redis.zscore(REDIS_KEY, proxy):
             self.redis.zadd(REDIS_KEY, proxy, score)
 
-    def decrease(self, proxy):
+    def reduce_proxy_score(self, proxy):
         """
         验证为通过，分数减一
 
@@ -44,7 +48,7 @@ class RedisClient:
         else:
             self.redis.zrem(REDIS_KEY, proxy)
 
-    def pop(self):
+    def pop_proxy(self):
         """
         返回一个代理
         """
@@ -56,7 +60,7 @@ class RedisClient:
             if result:
                 return random.choice(result)
 
-    def get(self, count=1):
+    def get_proxies(self, count=1):
         """
         返回指定数量代理，分数由高到低排序
 
@@ -67,13 +71,13 @@ class RedisClient:
             if index < count:
                 yield value.decode("utf-8")
 
-    def count(self):
+    def count_proxies(self):
         """
         返回代理总数
         """
         return self.redis.zcard(REDIS_KEY)
 
-    def all(self):
+    def all_proxies(self):
         """
         返回全部代理
         """
