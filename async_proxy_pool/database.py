@@ -22,7 +22,10 @@ class RedisClient:
         self, host=REDIS_HOST, port=REDIS_PORT, password=REDIS_PASSWORD
     ):
         conn_pool = redis.ConnectionPool(
-            host=host, port=port, password=password, max_connections=REDIS_MAX_CONNECTION
+            host=host,
+            port=port,
+            password=password,
+            max_connections=REDIS_MAX_CONNECTION,
         )
         self.redis = redis.Redis(connection_pool=conn_pool)
 
