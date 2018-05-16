@@ -30,6 +30,8 @@ MIN_SCORE = 0
 SANIC_HOST = "localhost"
 # sanic web port
 SANIC_PORT = 3289
+# 是否开启 sanic 日志记录
+SANIC_ACCESS_LOG = True
 
 # 校验器循环周期（分钟）
 VALIDATOR_RUN_CYCLE = 15
