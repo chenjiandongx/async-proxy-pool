@@ -1,0 +1,5 @@
+redis
+aiohttp
+schedule
+sanic
+pyquery
