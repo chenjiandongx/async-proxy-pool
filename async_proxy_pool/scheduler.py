@@ -9,6 +9,7 @@ from .config import CRAWLER_RUN_CYCLE, VALIDATOR_RUN_CYCLE
 
 from .crawler import crawler
 from .validator import validator
+from .logger import logger
 
 
 def run_schedule():
@@ -21,5 +22,9 @@ def run_schedule():
     schedule.every(VALIDATOR_RUN_CYCLE).minutes.do(validator.run).run()
 
     while True:
-        schedule.run_pending()
-        time.sleep(1)
+        try:
+            schedule.run_pending()
+            time.sleep(1)
+        except KeyboardInterrupt:
+            logger.info("You have canceled all jobs")
+            return
