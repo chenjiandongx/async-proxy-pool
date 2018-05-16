@@ -6,4 +6,5 @@ from async_proxy_pool.config import SANIC_HOST, SANIC_PORT
 
 
 # 启动服务端 app
-app.run(host=SANIC_HOST, port=SANIC_PORT)
+# 取消日志记录可以提高服务器性能
+app.run(host=SANIC_HOST, port=SANIC_PORT, access_log=False)
