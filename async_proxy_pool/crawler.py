@@ -6,7 +6,7 @@ import re
 import pyquery
 
 from .utils import requests
-from .database import RedisClient
+from .database import redis_conn
 from .logger import logger
 
 
@@ -14,6 +14,9 @@ all_funcs = []
 
 
 def collect_funcs(func):
+    """
+    装饰器，用于收集爬虫函数
+    """
     all_funcs.append(func)
     return func
 
@@ -25,12 +28,11 @@ class Crawler:
         """
         启动收集器
         """
-        redis = RedisClient()
         logger.info("Crawler working...")
         for func in all_funcs:
             for proxy in func():
+                redis_conn.add_proxy(proxy)
                 logger.info("Crawler √ {}".format(proxy))
-                redis.add(proxy)
 
     @staticmethod
     @collect_funcs
@@ -44,16 +46,13 @@ class Crawler:
         )
         pattern = "\d+\.\d+.\d+\.\d+:\d+"
 
-        def get_proxies(proxy_type, host):
+        items = [(0, "http://{}"), (1, "https://{}")]
+        for item in items:
+            proxy_type, host = item
             html = requests(url.format(proxy_type))
             if html:
                 for proxy in re.findall(pattern, html):
                     yield host.format(proxy)
-
-        items, res = [(0, "http://{}"), (1, "https://{}")], []
-        for item in items:
-            res.extend(get_proxies(*item))
-        return res
 
     @staticmethod
     @collect_funcs
@@ -63,7 +62,13 @@ class Crawler:
         """
         url = "http://www.xicidaili.com/{}"
 
-        def get_proxies(proxy_type, host):
+        items = []
+        for page in range(1, 21):
+            items.append(("wt/{}".format(page), "http://{}:{}"))
+            items.append(("wn/{}".format(page), "https://{}:{}"))
+
+        for item in items:
+            proxy_type, host = item
             html = requests(url.format(proxy_type))
             if html:
                 doc = pyquery.PyQuery(html)
@@ -73,14 +78,6 @@ class Crawler:
                     if ip and port:
                         yield host.format(ip, port)
 
-        res, items = [], []
-        for page in range(1, 21):
-            items.append(("wt/{}".format(page), "http://{}:{}"))
-            items.append(("wn/{}".format(page), "https://{}:{}"))
-        for item in items:
-            res.extend(get_proxies(*item))
-        return res
-
     @staticmethod
     @collect_funcs
     def crawl_kuaidaili():
@@ -89,7 +86,8 @@ class Crawler:
         """
         url = "https://www.kuaidaili.com/free/{}"
 
-        def get_proxies(proxy_type):
+        items = ["inha/1/"]
+        for proxy_type in items:
             html = requests(url.format(proxy_type))
             if html:
                 doc = pyquery.PyQuery(html)
@@ -99,11 +97,6 @@ class Crawler:
                     if ip and port:
                         yield "http://{}:{}".format(ip, port)
 
-        items, res = ["inha/1/"], []
-        for item in items:
-            res.extend(get_proxies(item))
-        return res
-
     @staticmethod
     @collect_funcs
     def crawl_ip3366():
@@ -112,7 +105,8 @@ class Crawler:
         """
         url = "http://www.ip3366.net/?stype=1&page={}"
 
-        def get_proxies(page):
+        items = [p for p in range(1, 8)]
+        for page in items:
             html = requests(url.format(page))
             if html:
                 doc = pyquery.PyQuery(html)
@@ -123,10 +117,24 @@ class Crawler:
                     if ip and port and schema:
                         yield "{}://{}:{}".format(schema.lower(), ip, port)
 
-        items, res = [page for page in range(1, 8)], []
-        for item in items:
-            res.extend(get_proxies(item))
-        return res
+    @staticmethod
+    @collect_funcs
+    def crawl_data5u():
+        """
+        无忧代理：http://www.data5u.com/
+        """
+        url = "http://www.data5u.com/"
+
+        html = requests(url)
+        if html:
+            doc = pyquery.PyQuery(html)
+            for index, item in enumerate(doc("li ul").items()):
+                if index > 0:
+                    ip = item("span:nth-child(1)").text()
+                    port = item("span:nth-child(2)").text()
+                    schema = item("span:nth-child(4)").text()
+                    if ip and port and schema:
+                        yield "{}://{}:{}".format(schema, ip, port)
 
 
 crawler = Crawler()
