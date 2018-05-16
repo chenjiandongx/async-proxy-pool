@@ -31,9 +31,9 @@ class Validator:
                         logger.info("Validator √ {}".format(proxy))
                     else:
                         logger.info("Validator × {}".format(proxy))
-                        self.redis.decrease(proxy)
+                        self.redis.reduce_proxy_score(proxy)
             except:
-                self.redis.decrease(proxy)
+                self.redis.reduce_proxy_score(proxy)
                 logger.info("Validator × {}".format(proxy))
 
     def run(self):
@@ -41,7 +41,7 @@ class Validator:
         启动校验器
         """
         logger.info("Validator working...")
-        proxies = self.redis.all()
+        proxies = self.redis.all_proxies()
         loop = asyncio.get_event_loop()
         for i in range(0, len(proxies), TEST_BATCH_COUNT):
             _proxies = proxies[i:i + TEST_BATCH_COUNT]

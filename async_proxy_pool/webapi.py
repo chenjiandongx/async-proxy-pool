@@ -16,7 +16,7 @@ async def test(request):
 
 @app.route("/pop")
 async def pop_proxy(request):
-    proxy = redis_conn.pop().decode("utf8")
+    proxy = redis_conn.pop_proxy().decode("utf8")
     if proxy[:5] == "https":
         return json({"https": proxy})
     else:
@@ -26,7 +26,7 @@ async def pop_proxy(request):
 @app.route("/get/<count:int>")
 async def get(request, count):
     res = []
-    for proxy in redis_conn.get(count):
+    for proxy in redis_conn.get_proxies(count):
         if proxy[:5] == "https":
             res.append({"https": proxy})
         else:
@@ -36,5 +36,5 @@ async def get(request, count):
 
 @app.route("/count")
 async def count_proxies(request):
-    count = redis_conn.count()
+    count = redis_conn.count_proxies()
     return json({"count": str(count)})
