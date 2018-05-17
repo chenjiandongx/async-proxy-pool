@@ -80,7 +80,7 @@ HEADERS = {
 
 **运行客户端，启动收集器和校验器**
 ```bash
-$ python client
+$ python client.py
 2018-05-16 23:41:39,234 - Crawler working...
 2018-05-16 23:41:40,509 - Crawler √ http://202.83.123.33:3128
 2018-05-16 23:41:40,509 - Crawler √ http://123.53.118.122:61234
@@ -132,7 +132,7 @@ $ python server.py
 
 * [校验模块](https://github.com/chenjiandongx/async-proxy-pool/blob/master/async_proxy_pool/validator.py)
 
-验证代理 IP 是否可用，如果代理可用则分数不变。不可用则权值 -1，直至权值为 0 时将代理从数据库中删除。
+验证代理 IP 是否可用，如果代理可用则分数 +1，最大值为 MAX_SCORE。不可用则权值 -1，直至权值为 0 时将代理从数据库中删除。
 
 * [调度模块](https://github.com/chenjiandongx/async-proxy-pool/blob/master/async_proxy_pool/scheduler.py)
 

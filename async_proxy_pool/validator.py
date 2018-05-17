@@ -28,10 +28,11 @@ class Validator:
                     TEST_BASE_URL, proxy=proxy, timeout=REQUEST_TIMEOUT
                 ) as resp:
                     if resp.status == 200:
+                        self.redis.increase_proxy_score(proxy)
                         logger.info("Validator √ {}".format(proxy))
                     else:
-                        logger.info("Validator × {}".format(proxy))
                         self.redis.reduce_proxy_score(proxy)
+                        logger.info("Validator × {}".format(proxy))
             except:
                 self.redis.reduce_proxy_score(proxy)
                 logger.info("Validator × {}".format(proxy))

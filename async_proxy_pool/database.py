@@ -41,7 +41,7 @@ class RedisClient:
 
     def reduce_proxy_score(self, proxy):
         """
-        验证为通过，分数减一
+        验证未通过，分数减一
 
         :param proxy: 验证代理
         """
@@ -50,6 +50,16 @@ class RedisClient:
             self.redis.zincrby(REDIS_KEY, proxy, -1)
         else:
             self.redis.zrem(REDIS_KEY, proxy)
+
+    def increase_proxy_score(self, proxy):
+        """
+        验证通过，分数加一
+
+        :param proxy: 验证代理
+        """
+        score = self.redis.zscore(REDIS_KEY, proxy)
+        if score and score < MAX_SCORE:
+            self.redis.zincrby(REDIS_KEY, proxy, 1)
 
     def pop_proxy(self):
         """
