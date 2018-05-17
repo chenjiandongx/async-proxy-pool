@@ -16,7 +16,7 @@ pyquery = "*"
 
 [dev-packages]
 
-
+requests = "*"
 
 [requires]
 
