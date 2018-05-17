@@ -27,8 +27,8 @@ $ pip install -r requirements.txt
 $ pipenv install
 ```
 
-#### 调整配置项
-配置文件 [config.py]()，保存了项目所使用到的所有配置项。如下所示，用户可以根据需求自行更改。不然按默认即可。
+#### 配置文件
+配置文件 [config.py](https://github.com/chenjiandongx/async-proxy-pool/blob/master/async_proxy_pool/config.py)，保存了项目所使用到的所有配置项。如下所示，用户可以根据需求自行更改。不然按默认即可。
 ```
 # 校验器测试网站，可以定向改为自己想爬取的网站，如新浪，知乎等
 TEST_BASE_URL = "https://httpbin.org/"
@@ -120,19 +120,19 @@ $ python server.py
 
 项目主要几大模块分别是爬取模块，存储模块，校验模块，接口模块。
 
-* [爬取模块]()
+* [爬取模块](https://github.com/chenjiandongx/async-proxy-pool/blob/master/async_proxy_pool/crawler.py)
 
 负责爬取代理网站，并将所得到的代理存入到数据库，每个代理的初始化权值为 MAX_SCORE。
 
-* [存储模块]()
+* [存储模块](https://github.com/chenjiandongx/async-proxy-pool/blob/master/async_proxy_pool/database.py)
 
 封装了 Redis 操作的一些接口，提供 Redis 连接池。
 
-* [校验模块]()
+* [校验模块](https://github.com/chenjiandongx/async-proxy-pool/blob/master/async_proxy_pool/validator.py)
 
 验证代理 IP 是否可用，如果代理可用则分数不变。不可用则权值 -1，直至权值为 0 时将代理从数据库中删除。
 
-* [接口模块]()
+* [接口模块](https://github.com/chenjiandongx/async-proxy-pool/blob/master/async_proxy_pool/webapi.py)
 
 使用 sanic 提供 WEB API 接口。
 
@@ -151,7 +151,7 @@ Keep-Alive: 5
 }
 ```
 
-`/pop`  
+**`/pop`**  
 随机返回一个代理，分三次尝试。
 1. 尝试返回权值为 MAX_SCORE，也就是最新可用的代理。
 2. 尝试返回随机权值在 (MAX_SCORE -3) - MAX_SCORE 之间的代理。
@@ -169,7 +169,7 @@ Keep-Alive: 5
 }
 ```
 
-`/get/<count>`  
+**`/get/<count>`**  
 返回指定数量的代理，权值从大到小排序。
 ```bash
 $ http http://localhost:3289/get/10
@@ -213,7 +213,7 @@ Keep-Alive: 5
 ]
 ```
 
-`/count`  
+**`/count`**  
 返回代理池中代理总数
 ```bash
 $ http http://localhost:3289/count
@@ -296,8 +296,9 @@ Running 30s test @ http://127.0.0.1:3289/
 Requests/sec:   3081.87
 Transfer/sec:    457.47KB
 ```
+⭐️ **Requests/sec:   3081.87**
 
-极限操作，关闭 sanic 日志记录，测试 http://127.0.0.1:3289/
+关闭 sanic 日志记录，测试 http://127.0.0.1:3289/
 ```bash
 $ wrk -t12 -c400 -d30s http://127.0.0.1:3289/
 Running 30s test @ http://127.0.0.1:3289/
@@ -311,6 +312,93 @@ Transfer/sec:      1.65MB
 ```
 ⭐️ **Requests/sec:  11387.89**
 
+
+### 实际代理性能测试
+[test_proxy.py](https://github.com/chenjiandongx/async-proxy-pool/blob/master/test/test_proxy.py) 用于测试实例代理性能
+
+```python
+import random
+import asyncio
+
+import requests
+import aiohttp
+
+
+SUCCESS = 0
+FAIL = 0
+TEST_COUNT = 1000
+TEST_WEBSITE = "https://httpbin.org/"
+PROXIES_URL = "http://localhost:3289/get/20"
+
+
+async def test_proxy(proxy, url):
+    global SUCCESS, FAIL
+    async with aiohttp.ClientSession() as session:
+        try:
+            async with session.get(url, proxy=proxy, timeout=15) as resp:
+                if resp.status == 200:
+                    SUCCESS += 1
+                else:
+                    FAIL += 1
+        except:
+            FAIL += 1
+
+
+def get_proxies(proxies_url):
+    proxies = requests.get(proxies_url).json()
+    _proxies = []
+    for proxy in proxies:
+        for p in proxy.values():
+            _proxies.append(p)
+    return _proxies
+
+
+if __name__ == "__main__":
+    proxies = get_proxies(PROXIES_URL)
+    loop = asyncio.get_event_loop()
+    tasks = [
+        test_proxy(random.choice(proxies), TEST_WEBSITE)
+        for _ in range(TEST_COUNT)
+    ]
+    loop.run_until_complete(asyncio.wait(tasks))
+    print("测试网站：", TEST_WEBSITE)
+    print("成功次数：", SUCCESS)
+    print("失败次数：", FAIL)
+    print("成功率：", SUCCESS / TEST_COUNT)
+```
+
+运行测试文件代码
+
+TEST_WEBSITE = "https://httpbin.org/"
+```
+测试网站： https://httpbin.org
+成功次数： 43
+失败次数： 57
+成功率： 0.43
+```
+
+TEST_WEBSITE = "https://taobao.com/"
+```
+测试网站： https://taobao.com
+成功次数： 34
+失败次数： 66
+成功率： 0.34
+```
+
+TEST_WEBSITE = "https://baidu.com"
+```
+测试网站： https://baidu.com
+成功次数： 32
+失败次数： 68
+成功率： 0.32
+```
+
+可以看到验证器默认指定测试网站为 https://httpbin.org/ 的时候，代理该网站的效果就会好一点。但是毕竟是免费的，肯定不能指望有 7 8 成的成功率...
+
+### 参考借鉴项目
+
+* [ProxyPool](https://github.com/WiseDoge/ProxyPool)
+* [proxy_pool](https://github.com/jhao104/proxy_pool)
 
 ### License
 
