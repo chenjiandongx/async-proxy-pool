@@ -120,7 +120,7 @@ $ python server.py
 
 ### 总体架构
 
-项目主要几大模块分别是爬取模块，存储模块，校验模块，接口模块。
+项目主要几大模块分别是爬取模块，存储模块，校验模块，调度模块，接口模块。
 
 * [爬取模块](https://github.com/chenjiandongx/async-proxy-pool/blob/master/async_proxy_pool/crawler.py)
 
@@ -134,9 +134,13 @@ $ python server.py
 
 验证代理 IP 是否可用，如果代理可用则分数不变。不可用则权值 -1，直至权值为 0 时将代理从数据库中删除。
 
+* [调度模块](https://github.com/chenjiandongx/async-proxy-pool/blob/master/async_proxy_pool/scheduler.py)
+
+负责调度爬取器和校验器的运行。
+
 * [接口模块](https://github.com/chenjiandongx/async-proxy-pool/blob/master/async_proxy_pool/webapi.py)
 
-使用 sanic 提供 WEB API 接口。
+使用 sanic 提供 **WEB API** 。
 
 `/`  
 欢迎页面
