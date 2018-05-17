@@ -1,5 +1,7 @@
-# Async Proxy Pool
-> 异步爬虫代理池，以 Python asyncio 为基础，旨在充分利用 Python 的异步性能。
+<h1 align="center">Async Proxy Pool</h1>
+<p align="center">
+    <em>异步爬虫代理池，以 Python asyncio 为基础，旨在充分利用 Python 的异步性能。</em>
+</p>
 
 ### 运行环境
 
@@ -393,9 +395,11 @@ TEST_WEBSITE = "https://baidu.com"
 成功率： 0.32
 ```
 
-可以看到验证器默认指定测试网站为 https://httpbin.org/ 的时候，代理该网站的效果就会好一点。但是毕竟是免费的，肯定不能指望有 7 8 成的成功率...
+可以看到验证器默认指定测试网站为 https://httpbin.org/ 的时候，代理该网站的效果就会好一点。但是毕竟是免费的，肯定不能指望有太高的成功率 😉
 
 ### 参考借鉴项目
+
+✨🍰✨
 
 * [ProxyPool](https://github.com/WiseDoge/ProxyPool)
 * [proxy_pool](https://github.com/jhao104/proxy_pool)
