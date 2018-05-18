@@ -49,6 +49,6 @@ class Validator:
             tasks = [self.test_proxy(proxy) for proxy in _proxies]
             if tasks:
                 loop.run_until_complete(asyncio.wait(tasks))
-
+        logger.info("Validator resting...")
 
 validator = Validator()

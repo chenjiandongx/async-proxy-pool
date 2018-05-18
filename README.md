@@ -373,33 +373,41 @@ if __name__ == "__main__":
     print("成功率：", SUCCESS / TEST_COUNT)
 ```
 
-运行测试文件代码
+运行测试文件代码，设置 TEST_BASE_URL 和 TEST_WEBSITE 为同一个网站。
 
-TEST_WEBSITE = "https://httpbin.org/"
+**https://httpbin.org/**
 ```
-测试网站： https://httpbin.org
-成功次数： 43
-失败次数： 57
-成功率： 0.43
-```
-
-TEST_WEBSITE = "https://taobao.com/"
-```
-测试网站： https://taobao.com
-成功次数： 34
-失败次数： 66
-成功率： 0.34
+测试网站： https://httpbin.org/
+成功次数： 711
+失败次数： 289
+成功率： 0.711
 ```
 
-TEST_WEBSITE = "https://baidu.com"
+**https://taobao.com**
+```
+测试网站： https://taobao.com/
+成功次数： 439
+失败次数： 561
+成功率： 0.439
+```
+
+**https://baidu.com**
 ```
 测试网站： https://baidu.com
-成功次数： 32
-失败次数： 68
-成功率： 0.32
+成功次数： 707
+失败次数： 293
+成功率： 0.707
 ```
 
-可以看到验证器默认指定测试网站为 https://httpbin.org/ 的时候，代理该网站的效果就会好一点。但是毕竟是免费的，肯定不能指望有太高的成功率 😉
+**https://zhihu.com**
+```
+测试网站： https://zhihu.com
+成功次数： 696
+失败次数： 304
+成功率： 0.696
+```
+
+可以看到其实性能还是可以接受的，淘宝的稍微低了一点。 😉
 
 ### 参考借鉴项目
 

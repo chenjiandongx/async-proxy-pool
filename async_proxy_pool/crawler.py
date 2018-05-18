@@ -33,6 +33,7 @@ class Crawler:
             for proxy in func():
                 redis_conn.add_proxy(proxy)
                 logger.info("Crawler √ {}".format(proxy))
+        logger.info("Crawler resting...")
 
     @staticmethod
     @collect_funcs
