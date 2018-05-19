@@ -142,7 +142,8 @@ $ python server.py
 
 使用 sanic 提供 **WEB API** 。
 
-`/`  
+`/`
+
 欢迎页面
 ```bash
 $ http http://localhost:3289/
@@ -420,9 +421,9 @@ if __name__ == "__main__":
 **https://httpbin.org/**
 ```
 测试网站： https://httpbin.org/
-成功次数： 711
-失败次数： 289
-成功率： 0.711
+成功次数： 838
+失败次数： 162
+成功率： 0.838
 ```
 
 **https://taobao.com**
@@ -435,18 +436,18 @@ if __name__ == "__main__":
 
 **https://baidu.com**
 ```
-测试网站： https://baidu.com
-成功次数： 707
-失败次数： 293
-成功率： 0.707
+测试网站： https://baidu.com/
+成功次数： 803
+失败次数： 197
+成功率： 0.803
 ```
 
 **https://zhihu.com**
 ```
-测试网站： https://zhihu.com
-成功次数： 696
-失败次数： 304
-成功率： 0.696
+测试网站： https://zhihu.com/
+成功次数： 729
+失败次数： 271
+成功率： 0.729
 ```
 
 可以看到其实性能还是可以接受的，淘宝的稍微低了一点。 😉
