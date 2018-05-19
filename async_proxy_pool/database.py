@@ -93,15 +93,26 @@ class RedisClient:
 
         :param count: 代理数量
         """
-        result = self.redis.zrevrange(REDIS_KEY, 0, count - 1)
-        for r in result:
-            yield r.decode("utf-8")
+        proxies = self.redis.zrevrange(REDIS_KEY, 0, count - 1)
+        for proxy in proxies:
+            yield proxy.decode("utf-8")
 
     def count_proxies(self):
         """
         返回代理总数
         """
         return self.redis.zcard(REDIS_KEY)
+
+    def clear_proxies(self, score):
+        """
+        删除分数小于等于 score 的代理
+        """
+        if 0 <= score <= 10:
+            proxies = self.redis.zrangebyscore(REDIS_KEY, 0, score)
+            for proxy in proxies:
+                self.redis.zrem(REDIS_KEY, proxy)
+            return True
+        return False
 
     def all_proxies(self):
         """
