@@ -235,7 +235,7 @@ Keep-Alive: 5
 ```
 
 
-**`/clear/<score:int>`**
+**`/clear/<score:int>`**  
 删除权值小于等于 score 的代理
 ```bash
 $ http http://localhost:3289/clear/0
