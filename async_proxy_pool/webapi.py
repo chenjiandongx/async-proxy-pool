@@ -35,8 +35,14 @@ async def get_proxy(request, count):
 
 
 @app.route("/count")
-async def count_proxies(request):
-    count = redis_conn.count_proxies()
+async def count_all_proxies(request):
+    count = redis_conn.count_all_proxies()
+    return json({"count": str(count)})
+
+
+@app.route("/count/<score:int>")
+async def count_score_proxies(request, score):
+    count = redis_conn.count_score_proxies(score)
     return json({"count": str(count)})
 
 

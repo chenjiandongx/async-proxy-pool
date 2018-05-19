@@ -97,11 +97,22 @@ class RedisClient:
         for proxy in proxies:
             yield proxy.decode("utf-8")
 
-    def count_proxies(self):
+    def count_all_proxies(self):
         """
-        返回代理总数
+        返回所有代理总数
         """
         return self.redis.zcard(REDIS_KEY)
+
+    def count_score_proxies(self, score):
+        """
+        返回指定分数代理总数
+
+        :param score: 代理分数
+        """
+        if 0 <= score <= 10:
+            proxies = self.redis.zrangebyscore(REDIS_KEY, score, score)
+            return len(proxies)
+        return -1
 
     def clear_proxies(self, score):
         """

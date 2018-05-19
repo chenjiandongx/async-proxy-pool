@@ -157,7 +157,9 @@ Keep-Alive: 5
 }
 ```
 
-**`/pop`**  
+
+**`/pop`**
+
 随机返回一个代理，分三次尝试。
 1. 尝试返回权值为 MAX_SCORE，也就是最新可用的代理。
 2. 尝试返回随机权值在 (MAX_SCORE -3) - MAX_SCORE 之间的代理。
@@ -175,7 +177,9 @@ Keep-Alive: 5
 }
 ```
 
+
 **`/get/<count:int>`**
+
 返回指定数量的代理，权值从大到小排序。
 ```bash
 $ http http://localhost:3289/get/10
@@ -219,8 +223,10 @@ Keep-Alive: 5
 ]
 ```
 
-**`/count`**  
-返回代理池中代理总数
+
+**`/count`**
+
+返回代理池中所有代理总数
 ```bash
 $ http http://localhost:3289/count
 HTTP/1.1 200 OK
@@ -235,7 +241,26 @@ Keep-Alive: 5
 ```
 
 
-**`/clear/<score:int>`**  
+**`/count/<score:int>`**
+
+返回指定分数代理总数
+```bash
+$ http http://localhost:3289/count/10
+HTTP/1.1 200 OK
+Connection: keep-alive
+Content-Length: 15
+Content-Type: application/json
+Keep-Alive: 5
+
+{
+    "count": "143"
+}
+
+```
+
+
+**`/clear/<score:int>`**
+
 删除权值小于等于 score 的代理
 ```bash
 $ http http://localhost:3289/clear/0
