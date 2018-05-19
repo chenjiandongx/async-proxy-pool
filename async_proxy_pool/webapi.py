@@ -10,7 +10,7 @@ app = Sanic()
 
 
 @app.route("/")
-async def test(request):
+async def index(request):
     return json({"Welcome": "This is a proxy pool system."})
 
 
@@ -24,7 +24,7 @@ async def pop_proxy(request):
 
 
 @app.route("/get/<count:int>")
-async def get(request, count):
+async def get_proxy(request, count):
     res = []
     for proxy in redis_conn.get_proxies(count):
         if proxy[:5] == "https":
@@ -41,7 +41,7 @@ async def count_proxies(request):
 
 
 @app.route("/clear/<score:int>")
-async def clear(request, score):
+async def clear_proxies(request, score):
     if redis_conn.clear_proxies(score):
         return json({"Clear": "Successful"})
     return json({"Clear": "Score should >= 0 and <= 10"})
