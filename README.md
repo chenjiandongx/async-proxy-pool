@@ -175,7 +175,7 @@ Keep-Alive: 5
 }
 ```
 
-**`/get/<count>`**  
+**`/get/<count:int>`**
 返回指定数量的代理，权值从大到小排序。
 ```bash
 $ http http://localhost:3289/get/10
@@ -233,6 +233,23 @@ Keep-Alive: 5
     "count": "698"
 }
 ```
+
+
+**`/clear/<score:int>`**
+删除权值小于等于 score 的代理
+```bash
+$ http http://localhost:3289/clear/0
+HTTP/1.1 200 OK
+Connection: keep-alive
+Content-Length: 22
+Content-Type: application/json
+Keep-Alive: 5
+
+{
+    "Clear": "Successful"
+}
+```
+
 
 ### 扩展爬取网站
 
