@@ -137,5 +137,45 @@ class Crawler:
                     if ip and port and schema:
                         yield "{}://{}:{}".format(schema, ip, port)
 
+    @staticmethod
+    @collect_funcs
+    def crawl_iphai():
+        """
+        ip 海代理：http://www.iphai.com
+        """
+        url = "http://www.iphai.com/free/{}"
+
+        items = ["ng", "np", "wg", "wp"]
+        for proxy_type in items:
+            html = requests(url.format(proxy_type))
+            if html:
+                doc = pyquery.PyQuery(html)
+                for item in doc(".table-bordered tr").items():
+                    ip = item("td:nth-child(1)").text()
+                    port = item("td:nth-child(2)").text()
+                    schema = item("td:nth-child(4)").text().split(",")[0]
+                    if ip and port and schema:
+                        yield "{}://{}:{}".format(schema.lower(), ip, port)
+
+    @staticmethod
+    @collect_funcs
+    def crawl_swei360():
+        """
+        360 代理：http://www.swei360.com
+        """
+        url = "http://www.swei360.com/free/?stype={}"
+
+        items = [p for p in range(1, 5)]
+        for proxy_type in items:
+            html = requests(url.format(proxy_type))
+            if html:
+                doc = pyquery.PyQuery(html)
+                for item in doc(".table-bordered tr").items():
+                    ip = item("td:nth-child(1)").text()
+                    port = item("td:nth-child(2)").text()
+                    schema = item("td:nth-child(4)").text()
+                    if ip and port and schema:
+                        yield "{}://{}:{}".format(schema.lower(), ip, port)
+
 
 crawler = Crawler()
