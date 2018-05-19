@@ -40,8 +40,8 @@ async def count_proxies(request):
     return json({"count": str(count)})
 
 
-@app.run("/clear/<score:int>")
+@app.route("/clear/<score:int>")
 async def clear(request, score):
     if redis_conn.clear_proxies(score):
-        return json({"clear": "successful"})
-    return json({"clear": "score should >= 0 and <= 10"})
+        return json({"Clear": "Successful"})
+    return json({"Clear": "Score should >= 0 and <= 10"})
