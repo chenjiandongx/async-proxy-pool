@@ -32,7 +32,9 @@ class RedisClient:
 
     def add_proxy(self, proxy, score=INIT_SCORE):
         """
-        新增一个代理
+        新增一个代理，初始化分数 INIT_SCORE < MAX_SCORE，确保在
+        运行完收集器后还没运行校验器就获取代理，导致获取到分数虽为 MAX_SCORE,
+        但实际上确是未经验证，不可用的代理
 
         :param proxy: 新增代理
         :param score: 初始化分数
