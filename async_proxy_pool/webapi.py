@@ -4,9 +4,10 @@
 from sanic import Sanic
 from sanic.response import json
 
-from async_proxy_pool.database import redis_conn
+from async_proxy_pool.database import RedisClient
 
 app = Sanic()
+redis_conn = RedisClient()
 
 
 @app.route("/")

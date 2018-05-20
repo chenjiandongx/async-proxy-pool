@@ -32,10 +32,9 @@ $ pipenv install
 #### 配置文件
 配置文件 [config.py](https://github.com/chenjiandongx/async-proxy-pool/blob/master/async_proxy_pool/config.py)，保存了项目所使用到的所有配置项。如下所示，用户可以根据需求自行更改。不然按默认即可。
 ```
-# 校验器测试网站，可以定向改为自己想爬取的网站，如新浪，知乎等
-TEST_BASE_URL = "https://httpbin.org/"
-# 批量测试数量
-TEST_BATCH_COUNT = 256
+#!/usr/bin/env python
+# coding=utf-8
+
 # 请求超时时间（秒）
 REQUEST_TIMEOUT = 15
 # 请求延迟时间（秒）
@@ -64,8 +63,14 @@ SANIC_PORT = 3289
 # 是否开启 sanic 日志记录
 SANIC_ACCESS_LOG = True
 
+# 批量测试数量
+VALIDATOR_BATCH_COUNT = 256
+# 校验器测试网站，可以定向改为自己想爬取的网站，如新浪，知乎等
+VALIDATOR_BASE_URL = "https://httpbin.org/"
 # 校验器循环周期（分钟）
 VALIDATOR_RUN_CYCLE = 15
+
+
 # 爬取器循环周期（分钟）
 CRAWLER_RUN_CYCLE = 30
 # 请求 headers
@@ -80,6 +85,7 @@ HEADERS = {
 
 **运行客户端，启动收集器和校验器**
 ```bash
+# 可设置校验网站环境变量 set/export VALIDATOR_BASE_URL="https://example.com"
 $ python client.py
 2018-05-16 23:41:39,234 - Crawler working...
 2018-05-16 23:41:40,509 - Crawler √ http://202.83.123.33:3128
@@ -365,92 +371,75 @@ Transfer/sec:      1.65MB
 ### 实际代理性能测试
 [test_proxy.py](https://github.com/chenjiandongx/async-proxy-pool/blob/master/test/test_proxy.py) 用于测试实例代理性能
 
-```python
-import random
-import asyncio
+最好测试 TEST_BASE_URL 和 TEST_WEBSITE 为同一个网站时的效果
+。
+**Windows**
 
-import requests
-import aiohttp
-
-
-SUCCESS = 0
-FAIL = 0
-TEST_COUNT = 1000
-TEST_WEBSITE = "https://httpbin.org/"
-PROXIES_URL = "http://localhost:3289/get/20"
-
-
-async def test_proxy(proxy, url):
-    global SUCCESS, FAIL
-    async with aiohttp.ClientSession() as session:
-        try:
-            async with session.get(url, proxy=proxy, timeout=15) as resp:
-                if resp.status == 200:
-                    SUCCESS += 1
-                else:
-                    FAIL += 1
-        except:
-            FAIL += 1
-
-
-def get_proxies(proxies_url):
-    proxies = requests.get(proxies_url).json()
-    _proxies = []
-    for proxy in proxies:
-        for p in proxy.values():
-            _proxies.append(p)
-    return _proxies
-
-
-if __name__ == "__main__":
-    proxies = get_proxies(PROXIES_URL)
-    loop = asyncio.get_event_loop()
-    tasks = [
-        test_proxy(random.choice(proxies), TEST_WEBSITE)
-        for _ in range(TEST_COUNT)
-    ]
-    loop.run_until_complete(asyncio.wait(tasks))
-    print("测试网站：", TEST_WEBSITE)
-    print("成功次数：", SUCCESS)
-    print("失败次数：", FAIL)
-    print("成功率：", SUCCESS / TEST_COUNT)
+```bash
+$ set TEST_WESITE="https://example.com"
 ```
 
-运行测试文件代码，设置 TEST_BASE_URL 和 TEST_WEBSITE 为同一个网站。
+**Linux/MacOS**
+
+```bash
+$ export  TEST_WESITE="https://example.com"
+```
+
+##### 运行代码
+
+```bash
+$ cd test
+$ python test_proxy.py
+
+# 可设置的环境变量
+TEST_COUNT = int(os.environ.get("TEST_COUNT")) or 1000
+TEST_WEBSITE = os.environ.get("TEST_WEBSITE") or "https://httpbin.org/"
+TEST_PROXIES = os.environ.get("TEST_PROXIES") or "http://localhost:3289/get/20"
+```
+
+##### 实测效果
 
 **https://httpbin.org/**
 ```
+测试代理： http://localhost:3289/get/20
 测试网站： https://httpbin.org/
-成功次数： 838
-失败次数： 162
-成功率： 0.838
+测试次数： 1000
+成功次数： 1000
+失败次数： 0
+成功率： 1.0
 ```
 
 **https://taobao.com**
 ```
+测试代理： http://localhost:3289/get/20
 测试网站： https://taobao.com/
-成功次数： 439
-失败次数： 561
-成功率： 0.439
+测试次数： 1000
+成功次数： 984
+失败次数： 16
+成功率： 0.984
 ```
 
 **https://baidu.com**
 ```
-测试网站： https://baidu.com/
-成功次数： 803
-失败次数： 197
-成功率： 0.803
+测试代理： http://localhost:3289/get/20
+测试网站： https://baidu.com
+测试次数： 1000
+成功次数： 975
+失败次数： 25
+成功率： 0.975
 ```
 
 **https://zhihu.com**
 ```
-测试网站： https://zhihu.com/
-成功次数： 729
-失败次数： 271
-成功率： 0.729
+测试代理： http://localhost:3289/get/20
+测试网站： https://zhihu.com
+测试次数： 1000
+成功次数： 1000
+失败次数： 0
+成功率： 1.0
 ```
 
-可以看到其实性能还是可以接受的，淘宝的稍微低了一点。 😉
+可以看到其实性能是非常棒的，成功率极高。 😉
 
 ### 参考借鉴项目
 

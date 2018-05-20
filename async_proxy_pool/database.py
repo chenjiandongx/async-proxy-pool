@@ -130,6 +130,3 @@ class RedisClient:
         返回全部代理
         """
         return self.redis.zrangebyscore(REDIS_KEY, MIN_SCORE, MAX_SCORE)
-
-
-redis_conn = RedisClient()

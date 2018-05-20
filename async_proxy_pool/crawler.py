@@ -6,10 +6,11 @@ import re
 import pyquery
 
 from .utils import requests
-from .database import redis_conn
+from .database import RedisClient
 from .logger import logger
 
 
+redis_conn = RedisClient()
 all_funcs = []
 
 

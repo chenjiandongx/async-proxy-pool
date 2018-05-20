@@ -6,12 +6,12 @@ import asyncio
 
 import aiohttp
 
-from .config import TEST_BASE_URL, TEST_BATCH_COUNT, REQUEST_TIMEOUT
+from .config import VALIDATOR_BASE_URL, VALIDATOR_BATCH_COUNT, REQUEST_TIMEOUT
 from .logger import logger
 from .database import RedisClient
 
 
-TEST_BASE_URL = os.environ.get("TEST_BASE_URL") or TEST_BASE_URL
+VALIDATOR_BASE_URL = os.environ.get("VALIDATOR_BASE_URL") or VALIDATOR_BASE_URL
 
 
 class Validator:
@@ -30,7 +30,7 @@ class Validator:
                 if isinstance(proxy, bytes):
                     proxy = proxy.decode("utf8")
                 async with session.get(
-                    TEST_BASE_URL, proxy=proxy, timeout=REQUEST_TIMEOUT
+                    VALIDATOR_BASE_URL, proxy=proxy, timeout=REQUEST_TIMEOUT
                 ) as resp:
                     if resp.status == 200:
                         self.redis.increase_proxy_score(proxy)
@@ -47,10 +47,11 @@ class Validator:
         启动校验器
         """
         logger.info("Validator working...")
+        logger.info("Validator website is {}".format(VALIDATOR_BASE_URL))
         proxies = self.redis.all_proxies()
         loop = asyncio.get_event_loop()
-        for i in range(0, len(proxies), TEST_BATCH_COUNT):
-            _proxies = proxies[i:i + TEST_BATCH_COUNT]
+        for i in range(0, len(proxies), VALIDATOR_BATCH_COUNT):
+            _proxies = proxies[i:i + VALIDATOR_BATCH_COUNT]
             tasks = [self.test_proxy(proxy) for proxy in _proxies]
             if tasks:
                 loop.run_until_complete(asyncio.wait(tasks))
