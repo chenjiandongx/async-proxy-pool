@@ -1,26 +1,27 @@
 #!/usr/bin/env python
 # coding=utf-8
 
-
+import os
 import random
 import asyncio
 
-import requests
 import aiohttp
 
 
 SUCCESS = 0
 FAIL = 0
-TEST_COUNT = 1000
-TEST_WEBSITE = "https://httpbin.org/"
-PROXIES_URL = "http://localhost:3289/get/20"
+TIMEOUT = 15
+
+TEST_COUNT = int(os.environ.get("TEST_COUNT")) or 1000
+TEST_WEBSITE = os.environ.get("TEST_WEBSITE") or "https://httpbin.org/"
+TEST_PROXIES = os.environ.get("TEST_PROXIES") or "http://localhost:3289/get/20"
 
 
 async def test_proxy(proxy, url):
     global SUCCESS, FAIL
     async with aiohttp.ClientSession() as session:
         try:
-            async with session.get(url, proxy=proxy, timeout=15) as resp:
+            async with session.get(url, proxy=proxy, timeout=TIMEOUT) as resp:
                 if resp.status == 200:
                     SUCCESS += 1
                 else:
@@ -29,18 +30,19 @@ async def test_proxy(proxy, url):
             FAIL += 1
 
 
-def get_proxies(proxies_url):
-    proxies = requests.get(proxies_url).json()
-    _proxies = []
-    for proxy in proxies:
-        for p in proxy.values():
-            _proxies.append(p)
-    return _proxies
+async def get_proxies():
+    async with aiohttp.ClientSession() as sess:
+        async with sess.get(TEST_PROXIES, timeout=TIMEOUT) as resp:
+            _proxies = []
+            for proxy in await resp.json():
+                for p in proxy.values():
+                    _proxies.append(p)
+            return _proxies
 
 
 if __name__ == "__main__":
-    proxies = get_proxies(PROXIES_URL)
     loop = asyncio.get_event_loop()
+    proxies = loop.run_until_complete(get_proxies())
     tasks = [
         test_proxy(random.choice(proxies), TEST_WEBSITE)
         for _ in range(TEST_COUNT)

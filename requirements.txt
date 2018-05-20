@@ -3,4 +3,3 @@ aiohttp
 schedule
 sanic
 pyquery
-requests
