@@ -293,21 +293,13 @@ class Crawler:
 
     @staticmethod
     def run():
-        """
-        启动收集器
-        """
-        logger.info("Crawler working...")
-        for func in all_funcs:
-            for proxy in func():
-                redis_conn.add_proxy(proxy)
-                logger.info("Crawler √ {}".format(proxy))
-
+        ...
 
     # 新增你自己的爬取方法
     @staticmethod
     @collect_funcs      # 加入装饰器用于最后运行函数
     def crawl_xxx():
-        # your code
+        # 爬取逻辑
 ```
 
 ### sanic 性能测试
@@ -372,7 +364,7 @@ Transfer/sec:      1.65MB
 
 ### 实际代理性能测试
 
-[test_proxy.py](https://github.com/chenjiandongx/async-proxy-pool/blob/master/test/test_proxy.py) 用于测试实例代理性能
+[test_proxy.py](https://github.com/chenjiandongx/async-proxy-pool/blob/master/test/test_proxy.py) 用于测试实际代理性能
 
 #### 运行代码
 
@@ -429,6 +421,33 @@ TEST_PROXIES = os.environ.get("TEST_PROXIES") or "http://localhost:3289/get/20"
 ```
 
 可以看到其实性能是非常棒的，成功率极高。 😉
+
+
+### 实际应用示例
+
+```python
+import random
+
+import requests
+
+# 确保已经启动 sanic 服务
+# 获取多个然后随机选一个
+
+try:
+    proxies = requests.get("http://localhost:3289/get/20").json()
+    req = requests.get("https://example.com", proxies=random.choice(proxies))
+except:
+    raise
+
+# 或者单独弹出一个
+
+try:
+    proxy = requests.get("http://localhost:3289/pop").json()
+    req = requests.get("https://example.com", proxies=proxy)
+except:
+    raise
+```
+
 
 ### aiohttp 的坑
 
