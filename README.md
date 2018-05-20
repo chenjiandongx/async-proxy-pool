@@ -371,8 +371,8 @@ Transfer/sec:      1.65MB
 ### 实际代理性能测试
 [test_proxy.py](https://github.com/chenjiandongx/async-proxy-pool/blob/master/test/test_proxy.py) 用于测试实例代理性能
 
-最好测试 TEST_BASE_URL 和 TEST_WEBSITE 为同一个网站时的效果
-。
+最好测试 TEST_BASE_URL 和 TEST_WEBSITE 为同一个网站时的效果。
+
 **Windows**
 
 ```bash
