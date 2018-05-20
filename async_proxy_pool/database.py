@@ -13,6 +13,7 @@ from .config import (
     REDIS_MAX_CONNECTION,
     MAX_SCORE,
     MIN_SCORE,
+    INIT_SCORE,
 )
 
 
@@ -29,7 +30,7 @@ class RedisClient:
         )
         self.redis = redis.Redis(connection_pool=conn_pool)
 
-    def add_proxy(self, proxy, score=MAX_SCORE):
+    def add_proxy(self, proxy, score=INIT_SCORE):
         """
         新增一个代理
 

@@ -55,6 +55,8 @@ REDIS_MAX_CONNECTION = 20
 MAX_SCORE = 10
 # REDIS SCORE 最小分数
 MIN_SCORE = 0
+# REDIS SCORE 初始分数
+INIT_SCORE = 9
 
 # sanic web host
 SANIC_HOST = "localhost"
@@ -130,7 +132,7 @@ $ python server.py
 
 * [爬取模块](https://github.com/chenjiandongx/async-proxy-pool/blob/master/async_proxy_pool/crawler.py)
 
-负责爬取代理网站，并将所得到的代理存入到数据库，每个代理的初始化权值为 MAX_SCORE。
+负责爬取代理网站，并将所得到的代理存入到数据库，每个代理的初始化权值为 INIT_SCORE。
 
 * [存储模块](https://github.com/chenjiandongx/async-proxy-pool/blob/master/async_proxy_pool/database.py)
 
@@ -250,7 +252,7 @@ Keep-Alive: 5
 
 **`/count/<score:int>`**
 
-返回指定分数代理总数
+返回指定权值代理总数
 ```bash
 $ http http://localhost:3289/count/10
 HTTP/1.1 200 OK

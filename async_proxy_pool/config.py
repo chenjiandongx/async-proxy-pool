@@ -21,6 +21,8 @@ REDIS_MAX_CONNECTION = 20
 MAX_SCORE = 10
 # REDIS SCORE 最小分数
 MIN_SCORE = 0
+# REDIS SCORE 初始分数
+INIT_SCORE = 9
 
 # sanic web host
 SANIC_HOST = "localhost"
