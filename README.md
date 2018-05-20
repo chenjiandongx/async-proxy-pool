@@ -138,7 +138,7 @@ $ python server.py
 
 * [校验模块](https://github.com/chenjiandongx/async-proxy-pool/blob/master/async_proxy_pool/validator.py)
 
-验证代理 IP 是否可用，如果代理可用则分数 +1，最大值为 MAX_SCORE。不可用则权值 -1，直至权值为 0 时将代理从数据库中删除。
+验证代理 IP 是否可用，如果代理可用则权值 +1，最大值为 MAX_SCORE。不可用则权值 -1，直至权值为 0 时将代理从数据库中删除。
 
 * [调度模块](https://github.com/chenjiandongx/async-proxy-pool/blob/master/async_proxy_pool/scheduler.py)
 
@@ -385,7 +385,7 @@ $ set TEST_WESITE="https://example.com"
 $ export  TEST_WESITE="https://example.com"
 ```
 
-##### 运行代码
+#### 运行代码
 
 ```bash
 $ cd test
@@ -397,7 +397,7 @@ TEST_WEBSITE = os.environ.get("TEST_WEBSITE") or "https://httpbin.org/"
 TEST_PROXIES = os.environ.get("TEST_PROXIES") or "http://localhost:3289/get/20"
 ```
 
-##### 实测效果
+#### 实测效果
 
 **https://httpbin.org/**
 ```
