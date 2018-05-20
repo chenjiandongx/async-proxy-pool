@@ -449,15 +449,15 @@ TEST_PROXIES = os.environ.get("TEST_PROXIES") or "http://localhost:3289/get/20"
 
 ![](https://user-images.githubusercontent.com/19553554/40276465-745db54a-5c3d-11e8-8662-0c73fdf4fe88.png)
 
-**划重点：** aiohttp supports HTTP/HTTPS proxies
+**划重点：aiohttp supports HTTP/HTTPS proxies**
 
 但是，它根本就不支持 https 代理好吧，在它的代码中是这样写的。
 
 ![](https://user-images.githubusercontent.com/19553554/40276470-a0d46a6a-5c3d-11e8-871d-a053c81fec56.png)
 
-**划重点：** Only http proxies are supported
+**划重点：Only http proxies are supported**
 
-我的心情可以说是十分负责的。😲 不过只有 http 代理效果也不错没什么太大影响，参见上面的测试数据。
+我的心情可以说是十分复杂的。😲 不过只有 http 代理效果也不错没什么太大影响，参见上面的测试数据。
 
 
 ### 参考借鉴项目
