@@ -1,12 +1,17 @@
 #!/usr/bin/env python
 # coding=utf-8
 
-import aiohttp
+import os
 import asyncio
+
+import aiohttp
 
 from .config import TEST_BASE_URL, TEST_BATCH_COUNT, REQUEST_TIMEOUT
 from .logger import logger
 from .database import RedisClient
+
+
+TEST_BASE_URL = os.environ.get("TEST_BASE_URL") or TEST_BASE_URL
 
 
 class Validator:
@@ -50,5 +55,6 @@ class Validator:
             if tasks:
                 loop.run_until_complete(asyncio.wait(tasks))
         logger.info("Validator resting...")
+
 
 validator = Validator()
