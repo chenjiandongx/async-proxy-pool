@@ -44,7 +44,7 @@ def test_one_proxy(proxy):
 
 if __name__ == "__main__":
     proxies = get_proxies()
-    tasks = [random.choice(proxies) for _ in range(TEST_COUNT)]
+    tasks = [random.choice(proxies) for _ in range(int(TEST_COUNT))]
     with ThreadPoolExecutor(max_workers=64) as executor:
         executor.map(test_one_proxy, tasks)
     print("测试代理：", TEST_PROXIES)

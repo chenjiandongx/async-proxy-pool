@@ -371,21 +371,8 @@ Transfer/sec:      1.65MB
 
 
 ### 实际代理性能测试
+
 [test_proxy.py](https://github.com/chenjiandongx/async-proxy-pool/blob/master/test/test_proxy.py) 用于测试实例代理性能
-
-最好测试 TEST_BASE_URL 和 TEST_WEBSITE 为同一个网站时的效果。
-
-**Windows**
-
-```bash
-$ set TEST_WESITE="https://example.com"
-```
-
-**Linux/MacOS**
-
-```bash
-$ export  TEST_WESITE="https://example.com"
-```
 
 #### 运行代码
 
@@ -394,7 +381,7 @@ $ cd test
 $ python test_proxy.py
 
 # 可设置的环境变量
-TEST_COUNT = int(os.environ.get("TEST_COUNT")) or 1000
+TEST_COUNT = os.environ.get("TEST_COUNT") or 1000
 TEST_WEBSITE = os.environ.get("TEST_WEBSITE") or "https://httpbin.org/"
 TEST_PROXIES = os.environ.get("TEST_PROXIES") or "http://localhost:3289/get/20"
 ```
