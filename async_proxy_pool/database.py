@@ -18,6 +18,10 @@ from .config import (
 
 
 class RedisClient:
+    """
+    代理池依赖了 Redis 数据库，使用了其`有序集合`的数据结构
+    （可按分数排序，key 值不能重复）
+    """
 
     def __init__(
         self, host=REDIS_HOST, port=REDIS_PORT, password=REDIS_PASSWORD

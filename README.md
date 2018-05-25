@@ -47,7 +47,7 @@ REDIS_PORT = 6379
 # redis 密码
 REDIS_PASSWORD = None
 # redis set key
-REDIS_KEY = "proxies"
+REDIS_KEY = "proxies:ranking"
 # redis 连接池最大连接量
 REDIS_MAX_CONNECTION = 20
 
@@ -285,7 +285,7 @@ Keep-Alive: 5
 ```
 
 
-### 扩展爬取网站
+### 扩展代理爬取网站
 
 在 crawler.py 文件里新增你自己的爬取方法。
 ```python
@@ -302,7 +302,15 @@ class Crawler:
         # 爬取逻辑
 ```
 
-### sanic 性能测试
+### 选择其他 web 框架
+
+本项目使用了 Sanic，但是开发者完全可以根据自己的需求选择其他 web 框架，web 模块是完全独立的，替换框架不会影响到项目的正常运行。需要如下步骤。
+
+1. 在 [webapi.py](https://github.com/chenjiandongx/async-proxy-pool/blob/master/async_proxy_pool/webapi.py) 里更换框架。
+2. 在 [server.py](https://github.com/chenjiandongx/async-proxy-pool/blob/master/server.py) 里修改 app 启动细节。
+
+
+### Sanic 性能测试
 
 使用 [wrk](https://github.com/wg/wrk) 进行服务器压力测试。基准测试 30 秒, 使用 12 个线程, 并发 400 个 http 连接。
 
