@@ -8,6 +8,9 @@ import aiohttp
 from .config import HEADERS, REQUEST_TIMEOUT, REQUEST_DELAY
 
 
+LOOP = asyncio.get_event_loop()
+
+
 async def _get_page(url, sleep):
     """
     获取并返回网页内容
@@ -30,7 +33,6 @@ def requests(url, sleep=REQUEST_DELAY):
     :param url: 请求链接
     :param sleep: 延迟时间（秒）
     """
-    loop = asyncio.get_event_loop()
-    html = loop.run_until_complete(asyncio.gather(_get_page(url, sleep)))
+    html = LOOP.run_until_complete(asyncio.gather(_get_page(url, sleep)))
     if html:
         return "".join(html)
