@@ -25,6 +25,9 @@ TEST_PROXIES = os.environ.get("TEST_PROXIES") or "http://localhost:3289/get/20"
 
 def get_proxies():
     _proxies = requests.get(TEST_PROXIES, timeout=TIMEOUT).json()
+    for proxy in _proxies:
+        if "http" in proxy.keys():
+            proxy["https"] = proxy["http"]
     return _proxies
 
 
