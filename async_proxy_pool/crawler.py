@@ -23,7 +23,6 @@ def collect_funcs(func):
 
 
 class Crawler:
-
     @staticmethod
     def run():
         """
