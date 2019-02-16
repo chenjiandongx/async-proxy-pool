@@ -5,7 +5,7 @@
 
 ### 运行环境
 
-项目使用了 [sanic](https://github.com/channelcat/sanic)，一个异步网络框架。所以建议运行 Python 环境为 Python3.5+，并且 sanic 不支持 Windows 系统，Windows 用户（比如我 😄）可以考虑使用 Ubuntu on Windows。
+项目使用了 [sanic](https://github.com/channelcat/sanic)，（也提供了 Flask）一个异步网络框架。所以建议运行 Python 环境为 Python3.5+，并且 sanic 不支持 Windows 系统，Windows 用户（比如我 😄）可以考虑使用 Ubuntu on Windows。
 
 
 ### 如何使用
@@ -24,14 +24,9 @@ $ git clone https://github.com/chenjiandongx/async-proxy-pool.git
 $ pip install -r requirements.txt
 ```
 
-使用 pipenv Pipfile
-```bash
-$ pipenv install
-```
-
 #### 配置文件
 配置文件 [config.py](https://github.com/chenjiandongx/async-proxy-pool/blob/master/async_proxy_pool/config.py)，保存了项目所使用到的所有配置项。如下所示，用户可以根据需求自行更改。不然按默认即可。
-```
+```python
 #!/usr/bin/env python
 # coding=utf-8
 
@@ -58,12 +53,12 @@ MIN_SCORE = 0
 # REDIS SCORE 初始分数
 INIT_SCORE = 9
 
-# sanic web host
-SANIC_HOST = "localhost"
-# sanic web port
-SANIC_PORT = 3289
-# 是否开启 sanic 日志记录
-SANIC_ACCESS_LOG = True
+# server web host
+SERVER_HOST = "localhost"
+# server web port
+SERVER_PORT = 3289
+# 是否开启日志记录
+SERVER_ACCESS_LOG = True
 
 # 批量测试数量
 VALIDATOR_BATCH_COUNT = 256
@@ -83,7 +78,7 @@ HEADERS = {
 }
 ```
 
-#### 运行项目
+### 运行项目
 
 **运行客户端，启动收集器和校验器**
 ```bash
@@ -120,35 +115,42 @@ $ python client.py
 ```
 
 **运行服务器，启动 web 服务**
+
+#### Sanic
 ```bash
-$ python server.py
+$ python server_sanic.py
 [2018-05-16 23:36:22 +0800] [108] [INFO] Goin' Fast @ http://localhost:3289
 [2018-05-16 23:36:22 +0800] [108] [INFO] Starting worker [108]
+```
+
+#### Flask
+```bash
+$ python server_flask.py
+* Serving Flask app "async_proxy_pool.webapi_flask" (lazy loading)
+* Environment: production
+  WARNING: Do not use the development server in a production environment.
+  Use a production WSGI server instead.
+* Debug mode: on
+* Restarting with stat
+* Debugger is active!
+* Debugger PIN: 322-954-449
+* Running on http://localhost:3289/ (Press CTRL+C to quit)
 ```
 
 ### 总体架构
 
 项目主要几大模块分别是爬取模块，存储模块，校验模块，调度模块，接口模块。
 
-* [爬取模块](https://github.com/chenjiandongx/async-proxy-pool/blob/master/async_proxy_pool/crawler.py)
+[爬取模块](https://github.com/chenjiandongx/async-proxy-pool/blob/master/async_proxy_pool/crawler.py)：负责爬取代理网站，并将所得到的代理存入到数据库，每个代理的初始化权值为 INIT_SCORE。
 
-负责爬取代理网站，并将所得到的代理存入到数据库，每个代理的初始化权值为 INIT_SCORE。
+[存储模块](https://github.com/chenjiandongx/async-proxy-pool/blob/master/async_proxy_pool/database.py)：封装了 Redis 操作的一些接口，提供 Redis 连接池。
 
-* [存储模块](https://github.com/chenjiandongx/async-proxy-pool/blob/master/async_proxy_pool/database.py)
+[校验模块](https://github.com/chenjiandongx/async-proxy-pool/blob/master/async_proxy_pool/validator.py)：验证代理 IP 是否可用，如果代理可用则权值 +1，最大值为 MAX_SCORE。不可用则权值 -1，直至权值为 0 时将代理从数据库中删除。
 
-封装了 Redis 操作的一些接口，提供 Redis 连接池。
+[调度模块](https://github.com/chenjiandongx/async-proxy-pool/blob/master/async_proxy_pool/scheduler.py)：负责调度爬取器和校验器的运行。
 
-* [校验模块](https://github.com/chenjiandongx/async-proxy-pool/blob/master/async_proxy_pool/validator.py)
+[接口模块](https://github.com/chenjiandongx/async-proxy-pool/blob/master/async_proxy_pool/webapi.py)：使用 sanic 提供 **WEB API** 。
 
-验证代理 IP 是否可用，如果代理可用则权值 +1，最大值为 MAX_SCORE。不可用则权值 -1，直至权值为 0 时将代理从数据库中删除。
-
-* [调度模块](https://github.com/chenjiandongx/async-proxy-pool/blob/master/async_proxy_pool/scheduler.py)
-
-负责调度爬取器和校验器的运行。
-
-* [接口模块](https://github.com/chenjiandongx/async-proxy-pool/blob/master/async_proxy_pool/webapi.py)
-
-使用 sanic 提供 **WEB API** 。
 
 `/`
 
