@@ -15,7 +15,6 @@ VALIDATOR_BASE_URL = os.environ.get("VALIDATOR_BASE_URL") or VALIDATOR_BASE_URL
 
 
 class Validator:
-
     def __init__(self):
         self.redis = RedisClient()
 
@@ -51,7 +50,7 @@ class Validator:
         proxies = self.redis.all_proxies()
         loop = asyncio.get_event_loop()
         for i in range(0, len(proxies), VALIDATOR_BATCH_COUNT):
-            _proxies = proxies[i:i + VALIDATOR_BATCH_COUNT]
+            _proxies = proxies[i : i + VALIDATOR_BATCH_COUNT]
             tasks = [self.test_proxy(proxy) for proxy in _proxies]
             if tasks:
                 loop.run_until_complete(asyncio.wait(tasks))

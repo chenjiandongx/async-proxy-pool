@@ -23,9 +23,7 @@ class RedisClient:
     （可按分数排序，key 值不能重复）
     """
 
-    def __init__(
-        self, host=REDIS_HOST, port=REDIS_PORT, password=REDIS_PASSWORD
-    ):
+    def __init__(self, host=REDIS_HOST, port=REDIS_PORT, password=REDIS_PASSWORD):
         conn_pool = redis.ConnectionPool(
             host=host,
             port=port,
@@ -73,9 +71,7 @@ class RedisClient:
         返回一个代理
         """
         # 第一次尝试取分数最高，也就是最新可用的代理
-        first_chance = self.redis.zrangebyscore(
-            REDIS_KEY, MAX_SCORE, MAX_SCORE
-        )
+        first_chance = self.redis.zrangebyscore(REDIS_KEY, MAX_SCORE, MAX_SCORE)
         if first_chance:
             return random.choice(first_chance)
 
@@ -88,9 +84,7 @@ class RedisClient:
                 return random.choice(second_chance)
             # 最后一次就随便取咯
             else:
-                last_chance = self.redis.zrangebyscore(
-                    REDIS_KEY, MIN_SCORE, MAX_SCORE
-                )
+                last_chance = self.redis.zrangebyscore(REDIS_KEY, MIN_SCORE, MAX_SCORE)
                 if last_chance:
                     return random.choice(last_chance)
 

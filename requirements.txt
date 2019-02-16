@@ -1,6 +1,7 @@
-redis==2.10.6
+redis
 aiohttp
 schedule
-sanic
 pyquery
 requests
+flask
+sanic;sys_platform!='win32'

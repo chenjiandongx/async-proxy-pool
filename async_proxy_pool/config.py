@@ -24,17 +24,17 @@ MIN_SCORE = 0
 # REDIS SCORE 初始分数
 INIT_SCORE = 9
 
-# sanic web host
-SANIC_HOST = "localhost"
-# sanic web port
-SANIC_PORT = 3289
-# 是否开启 sanic 日志记录
-SANIC_ACCESS_LOG = True
+# server web host
+SERVER_HOST = "localhost"
+# server web port
+SERVER_PORT = 3289
+# 是否开启日志记录
+SERVER_ACCESS_LOG = True
 
 # 批量测试数量
 VALIDATOR_BATCH_COUNT = 256
 # 校验器测试网站，可以定向改为自己想爬取的网站，如新浪，知乎等
-VALIDATOR_BASE_URL = "https://httpbin.org/"
+VALIDATOR_BASE_URL = "http://baidu.com"
 # 校验器循环周期（分钟）
 VALIDATOR_RUN_CYCLE = 15
 
